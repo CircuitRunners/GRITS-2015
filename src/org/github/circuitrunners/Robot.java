@@ -1,43 +1,62 @@
+package org.github.CircuitRunners;
 
-package org.usfirst.frc.team1002.robot;
-
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Victor;
 
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
- */
 public class Robot extends IterativeRobot {
-    /**
-     * This function is run when the robot is first started up and should be
-     * used for any initialization code.
-     */
+
+    // 0: Front Left, 1: Front Right, 2: Back Left, 3: Back Right
+    private CANTalon[4] driveMotors;
+
+    private Talon elevator;
+
+    // 0: ?, 1: ?
+    private Talon[2] intakeMotors;
+
+    // Robot Drive
+    private RobotDrive drive;
+
+    // Joystick
+    private Joystick mysteryController;
+
+    private double c;
+
     public void robotInit() {
+        for (int i = 0; i < 4; i++) driveMotors[i] = new CANTalon(i);
 
-    }
-
-    /**
-     * This function is called periodically during autonomous
-     */
-    public void autonomousPeriodic() {
-
-    }
-
-    /**
-     * This function is called periodically during operator control
-     */
-    public void teleopPeriodic() {
+        elevator = new Talon(0);
         
+        for (int i = 0; i < 2; i++) intakeMotors[i] = new Talon(i+1);
+
+        drive = new RobotDrive(driveMotors[0], driveMotors[1], driveMotors[2], driveMotors[3]);
+
+        mysteryController = new Joystick(0);
     }
-    
-    /**
-     * This function is called periodically during test mode
-     */
-    public void testPeriodic() {
-    
+
+    public void teleopInit() {
+        drive.setSafetyEnabled(true);
     }
-    
+
+    public void teleopPeriodic() {
+        c = /*get throttle*/;
+
+        double xAxis = mysteryController.getX();
+        double yAxis = mysteryController.getY();
+        double rotAxis = mysteryController.getZ();
+
+        // Mecanum drive
+        drive.mecanumDrive_Polar(xAxis, yAxis, rotAxis);
+
+        // Elevator control
+        elevator.set(/*down button*/ ? -1.0 : /*up button*/ ? 1.0 : 0.0);
+        
+        //Intake control
+        double intakeSpeed = /*in button*/ ? -1.0 : /*out button*/ ? 1.0 : 0.0;
+        intakeMotors[0].set(intakeSpeed);
+        intakeMotors[1].set(-intakeSpeed);
+    }
 }
