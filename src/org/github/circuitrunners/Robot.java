@@ -1,5 +1,6 @@
-package org.github.CircuitRunners;
+package org.github.circuitrunners;
 
+import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -9,13 +10,14 @@ import edu.wpi.first.wpilibj.Victor;
 
 public class Robot extends IterativeRobot {
 
-    // 0: Front Left, 1: Front Right, 2: Back Left, 3: Back Right
-    private CANTalon[4] driveMotors;
+    // 0: Front Left, 1: Front Right, 2: Back Right, 3: Back Left
+    private Talon[] driveMotors = new Talon[4];
 
-    private Talon elevator;
+    private CANTalon elevator = new CANTalon(0);
 
-    // 0: ?, 1: ?
-    private Talon[2] intakeMotors;
+    private Talon intakeTensionMotor;
+    // 0: left, 1: right
+    private Talon[] intakeMotors = new Talon[2];
 
     // Robot Drive
     private RobotDrive drive;
@@ -26,14 +28,17 @@ public class Robot extends IterativeRobot {
     private double c;
 
     public void robotInit() {
-        for (int i = 0; i < 4; i++) driveMotors[i] = new CANTalon(i);
+        for (int i = 0; i < 4; i++) driveMotors[i] = new Talon(i);
 
-        elevator = new Talon(0);
+        elevator = new CANTalon(0);
         
-        for (int i = 0; i < 2; i++) intakeMotors[i] = new Talon(i+1);
+        intakeTensionMotor = new Talon(driveMotors.length+1);
+        for (int i = 0; i < 2; i++) intakeMotors[i] = new Talon(driveMotors.length+i+1);
 
         drive = new RobotDrive(driveMotors[0], driveMotors[1], driveMotors[2], driveMotors[3]);
-
+        drive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
+        drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
+        
         mysteryController = new Joystick(0);
     }
 
