@@ -31,11 +31,9 @@ public class Robot extends IterativeRobot {
         elevator = new CANTalon(0);
         
         intakeTensionMotor = new Talon(driveMotors.length+1);
-        for (int i = 0; i < 2; i++) intakeMotors[i] = new Talon(driveMotors.length+i+1);
+        for (int i = 0; i < 2; i++) intakeMotors[i] = new Talon(driveMotors.length+i+2);
 
         drive = new RobotDrive(driveMotors[0], driveMotors[1], driveMotors[2], driveMotors[3]);
-        drive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
-        drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
         
         mysteryController = new Joystick(0);
     }
@@ -46,13 +44,13 @@ public class Robot extends IterativeRobot {
 
     public void teleopPeriodic() {
     	
-        double throttle = (mysteryController.getThrottle()+1)/-2;
-        double xAxis = throttle * mysteryController.getX();
-        double yAxis = throttle * mysteryController.getY();
-        double rotAxis = throttle * mysteryController.getTwist();
+        double throttle = (mysteryController.getThrottle()+1)/2;
+        double xAxis = throttle * mysteryController.getY();
+        double yAxis = throttle * -mysteryController.getTwist();
+        double rotation = throttle * mysteryController.getX();
 
         // Mecanum drive
-        drive.mecanumDrive_Polar(xAxis, yAxis, rotAxis);
+        drive.mecanumDrive_Cartesian(xAxis, yAxis, rotation, 0);
 
         // Elevator control
         elevator.set(mysteryController.getRawButton(6) ? -1.0 : mysteryController.getRawButton(4) ? 1.0 : 0.0);
