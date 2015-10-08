@@ -45,9 +45,9 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	
         double throttle = (mysteryController.getThrottle()+1)/2;
-        double xAxis = throttle * mysteryController.getY();
-        double yAxis = throttle * -mysteryController.getTwist();
-        double rotation = throttle * mysteryController.getX();
+        double xAxis = throttle * mysteryController.getRawAxis(1);
+        double yAxis = throttle * mysteryController.getRawAxis(2) > 0 ? -mysteryController.getRawAxis(2) : mysteryController.getRawAxis(3);
+        double rotation = throttle * mysteryController.getRawAxis(0);
 
         // Mecanum drive
         drive.mecanumDrive_Cartesian(xAxis, yAxis, rotation, 0);
