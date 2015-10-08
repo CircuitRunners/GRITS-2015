@@ -5,8 +5,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.Victor;
 
 public class Robot extends IterativeRobot {
 
@@ -47,20 +45,21 @@ public class Robot extends IterativeRobot {
     }
 
     public void teleopPeriodic() {
-        c = /*get throttle*/;
-
-        double xAxis = mysteryController.getX();
-        double yAxis = mysteryController.getY();
-        double rotAxis = mysteryController.getZ();
+    	
+        double throttle = (mysteryController.getThrottle()+1)/2;
+        double xAxis = throttle * mysteryController.getX();
+        double yAxis = throttle * mysteryController.getY();
+        double rotAxis = throttle * mysteryController.getZ();
 
         // Mecanum drive
         drive.mecanumDrive_Polar(xAxis, yAxis, rotAxis);
 
         // Elevator control
-        elevator.set(/*down button*/ ? -1.0 : /*up button*/ ? 1.0 : 0.0);
+        elevator.set(mysteryController.getRawButton(6) ? -1.0 : mysteryController.getRawButton(4) ? 1.0 : 0.0);
         
         //Intake control
-        double intakeSpeed = /*in button*/ ? -1.0 : /*out button*/ ? 1.0 : 0.0;
+        intakeTensionMotor.set(mysteryController.getRawButton(2) ? -1.0 : mysteryController.getRawButton(1) ? 1.0 : 0.0);
+        double intakeSpeed = mysteryController.getRawButton(5) ? -1.0 : mysteryController.getRawButton(3) ? 1.0 : 0.0;
         intakeMotors[0].set(intakeSpeed);
         intakeMotors[1].set(-intakeSpeed);
     }
