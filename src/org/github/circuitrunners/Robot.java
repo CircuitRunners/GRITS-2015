@@ -46,10 +46,10 @@ public class Robot extends IterativeRobot {
 
     public void teleopPeriodic() {
     	
-        double throttle = (mysteryController.getThrottle()+1)/2;
+        double throttle = (mysteryController.getThrottle()+1)/-2;
         double xAxis = throttle * mysteryController.getX();
         double yAxis = throttle * mysteryController.getY();
-        double rotAxis = throttle * mysteryController.getZ();
+        double rotAxis = throttle * mysteryController.getTwist();
 
         // Mecanum drive
         drive.mecanumDrive_Polar(xAxis, yAxis, rotAxis);
