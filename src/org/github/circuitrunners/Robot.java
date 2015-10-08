@@ -58,8 +58,8 @@ public class Robot extends IterativeRobot {
         elevator.set(mysteryController.getRawButton(6) ? -1.0 : mysteryController.getRawButton(4) ? 1.0 : 0.0);
         
         //Intake control
-        intakeTensionMotor.set(mysteryController.getRawButton(2) ? -1.0 : mysteryController.getRawButton(1) ? 1.0 : 0.0);
-        double intakeSpeed = mysteryController.getRawButton(5) ? -1.0 : mysteryController.getRawButton(3) ? 1.0 : 0.0;
+        double intakeSpeed = mysteryController.getRawButton(2) ? -1.0 : mysteryController.getRawButton(1) ? 1.0 : 0.0;
+		intakeTensionMotor.set(intakeSpeed > 0.0 ? 1.0 : mysteryController.getRawButton(5) ? -1.0 : 0.0);
         intakeMotors[0].set(intakeSpeed);
         intakeMotors[1].set(-intakeSpeed);
     }
