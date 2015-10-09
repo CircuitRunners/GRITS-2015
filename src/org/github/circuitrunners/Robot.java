@@ -21,9 +21,9 @@ public class Robot extends IterativeRobot {
     private RobotDrive drive;
 
     // Joystick
-    private Joystick mysteryController;
+    private Joystick driveStick;
 
-    private double c;
+	private Joystick controlStick;
 
     public void robotInit() {
         for (int i = 0; i < 4; i++) driveMotors[i] = new Talon(i);
@@ -35,7 +35,8 @@ public class Robot extends IterativeRobot {
 
         drive = new RobotDrive(driveMotors[0], driveMotors[1], driveMotors[2], driveMotors[3]);
         
-        mysteryController = new Joystick(0);
+        driveStick = new Joystick(0);
+        controlStick = new Joystick(1);
     }
 
     public void teleopInit() {
@@ -44,21 +45,26 @@ public class Robot extends IterativeRobot {
 
     public void teleopPeriodic() {
     	
-        double throttle = (mysteryController.getThrottle()+1)/2;
-        double xAxis = throttle * mysteryController.getY();
-        double yAxis = throttle * -mysteryController.getTwist();
-        double rotation = throttle * mysteryController.getX();
+        double throttle = (driveStick.getThrottle()+1)/2;
+        double xAxis = throttle * driveStick.getY();
+        double yAxis = throttle * -driveStick.getTwist();
+        double rotation = throttle * driveStick.getX();
 
         // Mecanum drive
         drive.mecanumDrive_Cartesian(xAxis, yAxis, rotation, 0);
 
         // Elevator control
-        elevator.set(mysteryController.getRawButton(6) ? -1.0 : mysteryController.getRawButton(4) ? 1.0 : 0.0);
+        elevator.set(driveStick.getRawButton(6) ? -1.0 : driveStick.getRawButton(4) ? 1.0 : 0.0);
         
         //Intake control
-        double intakeSpeed = mysteryController.getRawButton(2) ? -1.0 : mysteryController.getRawButton(1) ? 1.0 : 0.0;
-		intakeTensionMotor.set(intakeSpeed > 0.0 ? 1.0 : mysteryController.getRawButton(5) ? -1.0 : 0.0);
-        intakeMotors[0].set(intakeSpeed);
-        intakeMotors[1].set(-intakeSpeed);
+		intakeTensionMotor.set(driveStick.getRawButton(2) ? 1.0 : driveStick.getRawButton(9) ? -1.0 : 0.0);
+        if (Math.abs(controlStick.getTwist()) > 0) {
+        	intakeMotors[0].set(controlStick.getTwist());
+        	intakeMotors[1].set(controlStick.getTwist());
+        } else {
+        	double intakeSpeed = driveStick.getRawButton(1) ? -1.0 : driveStick.getRawButton(5) ? 1.0 : 0.0;
+    		intakeMotors[0].set(intakeSpeed);
+            intakeMotors[1].set(-intakeSpeed);
+        }
     }
 }
