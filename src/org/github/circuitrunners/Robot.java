@@ -53,10 +53,10 @@ public class Robot extends IterativeRobot {
         drive.mecanumDrive_Cartesian(xAxis, yAxis, rotation, 0);
 
         // Elevator control
-        elevator.set(mysteryController.getRawButton(6) ? -1.0 : mysteryController.getRawButton(4) ? 1.0 : 0.0);
+        elevator.set(mysteryController.getRawButton(4) ? -1.0 : mysteryController.getRawButton(3) ? 1.0 : 0.0);
         
         //Intake control
-        double intakeSpeed = mysteryController.getRawButton(2) ? -1.0 : mysteryController.getRawButton(1) ? 1.0 : 0.0;
+        double intakeSpeed = mysteryController.getRawButton(2) ? 1.0 : mysteryController.getRawButton(1) ? -1.0 : mysteryController.getRawButton(7) ? -1.0 : mysteryController.getRawButton(8) ? 1.0 : 0.0;
 		intakeTensionMotor.set(intakeSpeed > 0.0 ? 1.0 : mysteryController.getRawButton(5) ? -1.0 : 0.0);
         intakeMotors[0].set(intakeSpeed);
         intakeMotors[1].set(-intakeSpeed);
